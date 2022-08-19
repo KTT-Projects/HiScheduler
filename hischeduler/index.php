@@ -68,6 +68,7 @@ if ($_POST['create_area_submit'] == '追加') {
       }
     }
   }
+  // login_area
 } elseif ($_POST['login_area_submit'] == 'ログイン') {
   // Putting post type data into variables
   $area_name = $_POST['login_area_name'];
@@ -76,6 +77,7 @@ if ($_POST['create_area_submit'] == '追加') {
   if ($area_name == '' || $area_name == null || $area_password == '' || $area_password == null) {
     $error[] = '未入力箇所があります。';
   }
+  // Get admin password
   if (empty($error)) {
     try {
       $pdo = new PDO(DSN, DB_USER, DB_PASS);
@@ -88,6 +90,7 @@ if ($_POST['create_area_submit'] == '追加') {
     } catch (PDOException $e) {
       $error[] = $e;
     }
+    // Validate password
     if (empty($error) && password_verify($area_password, $actual_password)) {
       $_SESSION['LOGGED_IN'] = 1;
       $_SESSION['AREA'] = $area_name;
@@ -97,6 +100,106 @@ if ($_POST['create_area_submit'] == '追加') {
       $error[] = 'パスワードまたは地域名が間違っています。';
     }
   }
+  // create_com
+} elseif ($_POST['create_com_submit'] == '追加') {
+  // Putting post type data into variables
+  $area_name = $_POST['create_com_area_name'];
+  $area_password = $_POST['create_com_password'];
+  $com_name = $_POST['create_com_name'];
+  $com_password = $_POST['create_com_password'];
+  $com_admin = $_POST['create_com_admin'];
+  $actual_password = '';
+  if ($area_name == '' || $area_name == null || $area_password == '' || $area_password == null || $com_name == '' || $com_name == null || $com_password == '' || $com_password == null || $com_admin == '' || $com_admin == null) {
+    $error[] = '未入力箇所があります。';
+  }
+  if (empty($error)) {
+    // validate area password
+    if (preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $com_password)) {
+      $com_password = password_hash($com_password, PASSWORD_DEFAULT);
+    } else {
+      $error[] = '地域パスワードは半角英数字をそれぞれ1文字以上含んだ8文字以上で設定してください。';
+    }
+    // validate admin password
+    if (preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $com_admin)) {
+      $com_admin = password_hash($com_admin, PASSWORD_DEFAULT);
+    } else {
+      $error[] = '管理者パスワードは半角英数字をそれぞれ1文字以上含んだ8文字以上で設定してください。';
+    }
+    if (empty($error)) {
+      // Get area password
+      try {
+        $pdo = new PDO(DSN, DB_USER, DB_PASS);
+        $stmt = $pdo->prepare('SELECT area_password FROM area WHERE area_name = :area_name');
+        $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+        $stmt->execute();
+        foreach ($stmt as $row) {
+          $actual_password = $row['area_password'];
+        }
+      } catch (PDOException $e) {
+        $error[] = $e;
+      }
+      // Validate password
+      if (empty($error) && password_verify($area_password, $actual_password)) {
+        // Insert data into company database
+        try {
+          $pdo = new PDO(DSN, DB_USER, DB_PASS);
+          $stmt = $pdo->prepare('INSERT INTO company (com_name, com_password, admin_password, area) VALUES (:com_name, :com_password, :com_admin, :area_name)');
+          $stmt->bindParam(':com_name', $com_name, PDO::PARAM_STR);
+          $stmt->bindParam(':com_password', $com_password, PDO::PARAM_STR);
+          $stmt->bindParam(':com_admin', $com_admin, PDO::PARAM_STR);
+          $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+          $stmt->execute();
+        } catch (PDOException $e) {
+          $error[] = '既に地域内に存在する会社名です。';
+        }
+        if (empty($error)) {
+          $_SESSION['LOGGED_IN'] = 1;
+          $_SESSION['AREA'] = $area_name;
+          $_SESSION['COM'] = $com_name;
+          $_SESSION['COM_ADMIN'] = 1;
+          header('Location: ./home.php');
+        }
+      } else {
+        $error[] = 'パスワードまたは地域名が間違っています。';
+      }
+    }
+  }
+  // login_com
+} elseif ($_POST['login_com_submit'] == 'ログイン') {
+  // Putting post type data into variables
+  $area_name = $_POST['login_com_area'];
+  $com_name = $_POST['login_com_name'];
+  $com_password = $_POST['login_com_password'];
+  $actual_password = '';
+  if ($com_name == '' || $com_name == null || $com_password == '' || $com_password == null || $area_name == '' || $area_name == null) {
+    $error[] = '未入力箇所があります。';
+  }
+  // Get admin password
+  if (empty($error)) {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT admin_password FROM company WHERE area = :area_name AND com_name = :com_name');
+      $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+      $stmt->bindParam(':com_name', $com_name, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $actual_password = $row['admin_password'];
+      }
+    } catch (PDOException $e) {
+      $error[] = $e;
+    }
+    // Validate password
+    if (empty($error) && password_verify($com_password, $actual_password)) {
+      $_SESSION['LOGGED_IN'] = 1;
+      $_SESSION['COM'] = $com_name;
+      $_SESSION['AREA'] = $area_name;
+      $_SESSION['COM_ADMIN'] = 1;
+      header('Location: ./home.php');
+    } else {
+      $error[] = 'パスワードまたは会社名/地域名が間違っています。';
+    }
+  }
+  // create_com
 }
 ?>
 <!DOCTYPE html>
@@ -121,14 +224,15 @@ if ($_POST['create_area_submit'] == '追加') {
 </script>
 
 <body>
-  <ul class="error_container">
-    <?php
+  <?php
+  if (!empty($error)) {
+    echo '<ul class="error_container">';
     foreach ($error as $message) {
       echo '<li class="error">' . $message . '</li>';
-      echo '<button class="close_error">非表示</button>';
     }
-    ?>
-  </ul>
+    echo '<button class="close_error">非表示</button></ul>';
+  }
+  ?>
   <label for="login_area">地域管理者としてログイン</label>
   <form method="post" class="login_area">
     <input type="text" name="login_area_name" placeholder="地域名">
@@ -139,7 +243,7 @@ if ($_POST['create_area_submit'] == '追加') {
   <label for="login_com">会社管理者としてログイン</label>
   <form method="post" class="login_com">
     <input type="text" name="login_com_area" placeholder="地域名">
-    <input type="text" name="login_com_com" placeholder="会社名">
+    <input type="text" name="login_com_name" placeholder="会社名">
     <input type="password" name="login_com_password" placeholder="管理者パスワード">
     <input type="submit" value="ログイン" name="login_com_submit">
   </form>
@@ -161,7 +265,7 @@ if ($_POST['create_area_submit'] == '追加') {
     <input type="submit" value="追加" name="create_area_submit">
   </form>
 
-  <label for="create_com">企業を追加</label>
+  <label for="create_com">会社を追加</label>
   <form method="post" class="create_com">
     <input type="text" name="create_com_area_name" placeholder="地域名">
     <input type="password" name="create_com_area_password" placeholder="地域パスワード">
@@ -171,7 +275,7 @@ if ($_POST['create_area_submit'] == '追加') {
     <input type="submit" value="追加" name="create_com_submit">
   </form>
 
-  <label for="create_user">通常ユーザーを作成してログイン</label>
+  <label for="create_user">通常ユーザーを作成</label>
   <form method="post" class="create_user">
     <input type="text" name="create_user_area_name" placeholder="地域名">
     <input type="text" name="create_user_com_name" placeholder="会社名">
