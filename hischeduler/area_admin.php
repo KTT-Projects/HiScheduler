@@ -68,6 +68,30 @@ if ($_SESSION['AREA_ADMIN'] != 1) {
         }
       });
     }
+    // Delete area
+    function delete_area() {
+      let data3 = {
+        'ajax': 3,
+        'area': '<?php echo $_SESSION['AREA']; ?>'
+      }
+      $.ajax({
+          dataType: 'json',
+          url: './data.php',
+          type: 'post',
+          data: data3
+        })
+        .done(function(data, dataType) {
+          if (data == 'success') {
+            location.href = './remove_all_sessions.php';
+          }
+        });
+    }
+    // When delete area button is pressed:
+    $('.delete_area').click(function() {
+      if (confirm('本当にこの地域を削除しますか？')) {
+        delete_area();
+      }
+    });
     // 初期実行
     get_companies();
     delete_company_click();
@@ -81,6 +105,7 @@ if ($_SESSION['AREA_ADMIN'] != 1) {
 <body>
   <a href="./home.php" class="home_link">ホームへ</a>
   <ul class="companies"></ul>
+  <button class="delete_area">地域を削除</button>
 </body>
 
 </html>

@@ -38,6 +38,8 @@ if ($_POST['logout'] == 'ログアウト') {
   <?php
   if ($_SESSION['AREA_ADMIN'] == 1) {
     echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
+  } elseif ($_SESSION['COM_ADMIN']) {
+    echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
   }
   ?>
   <form method="post">

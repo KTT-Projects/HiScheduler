@@ -26,4 +26,23 @@ if ($_POST['ajax'] == 1) {
     echo json_encode('success');
   } catch (PDOException $e) {
   }
+} elseif ($_POST['ajax'] == 3) {
+  $area_name = $_POST['area'];
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM area WHERE area_name = :area_name');
+    $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo json_encode('fail');
+  }
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM company WHERE area = :area_name');
+    $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+    $stmt->execute();
+    echo json_encode('success');
+  } catch (PDOException $e) {
+    echo json_encode('fail');
+  }
 }
