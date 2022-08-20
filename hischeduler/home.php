@@ -13,6 +13,7 @@ if ($_POST['logout'] == 'ログアウト') {
   $_SESSION = array();
   header('Location: ./index.php');
 }
+// var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -34,6 +35,11 @@ if ($_POST['logout'] == 'ログアウト') {
 </script>
 
 <body>
+  <?php
+  if ($_SESSION['AREA_ADMIN'] == 1) {
+    echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
+  }
+  ?>
   <form method="post">
     <input type="submit" value="ログアウト" name="logout">
   </form>
