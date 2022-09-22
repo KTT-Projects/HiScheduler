@@ -103,7 +103,7 @@ if ($_SESSION['AREA_ADMIN'] != 1) {
 </script>
 
 <body>
-  <a href="./home.php" class="home_link">ホームへ</a>
+  <a href="./home.php" class="home_link">戻る</a>
   <ul class="companies"></ul>
   <button class="delete_area">地域を削除</button>
 </body>

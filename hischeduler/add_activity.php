@@ -45,10 +45,14 @@ if ($_POST['add_activity_submit'] == '追加') {
     $start = $_POST['activity_start_date'] . ' ' . $_POST['activity_start_time'] . ':00';
     $end = $_POST['activity_end_date'] . ' ' . $_POST['activity_end_time'] . ':00';
     $details = $_POST['activity_details'];
+    $area = $_SESSION['AREA'];
+    $company = $_SESSION['COM'];
     if (empty($error)) {
       try {
         $pdo = new PDO(DSN, DB_USER, DB_PASS);
-        $stmt = $pdo->prepare('INSERT INTO activity (name, start, end, details, pdf_path) VALUES (:name, :start, :end, :details, :file_path)');
+        $stmt = $pdo->prepare('INSERT INTO activity (area, company, name, start, end, details, pdf_path) VALUES (:area, :company, :name, :start, :end, :details, :file_path)');
+        $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+        $stmt->bindParam(':company', $company, PDO::PARAM_STR);
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':start', $start, PDO::PARAM_STR);
         $stmt->bindParam(':end', $end, PDO::PARAM_STR);
@@ -93,6 +97,7 @@ if ($_POST['add_activity_submit'] == '追加') {
     echo '<button class="close_error">非表示</button></ul>';
   }
   ?>
+  <a href="./home.php">戻る</a>
   <label for="add_activity">研修を追加</label>
   <form method="post" class="add_activity" enctype="multipart/form-data">
     <input type="text" name="activity_name" placeholder="研修名">

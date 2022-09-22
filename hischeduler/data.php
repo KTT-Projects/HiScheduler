@@ -56,6 +56,15 @@ if ($_POST['ajax'] == 1) {
   } catch (PDOException $e) {
     echo json_encode('fail');
   }
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM activity WHERE area = :area_name');
+    $stmt->bindParam(':area_name', $area_name, PDO::PARAM_STR);
+    $stmt->execute();
+    echo json_encode('success');
+  } catch (PDOException $e) {
+    echo json_encode('fail');
+  }
   // Get all users (com_admin.php)
 } elseif ($_POST['ajax'] == 4) {
   $area = $_POST['area'];
@@ -106,6 +115,47 @@ if ($_POST['ajax'] == 1) {
   try {
     $pdo = new PDO(DSN, DB_USER, DB_PASS);
     $stmt = $pdo->prepare('UPDATE user SET permission = 0 WHERE id = :id');
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    echo json_encode('success');
+  } catch (PDOException $e) {
+  }
+  // Getting all activities (remove_activity.php)
+} elseif ($_POST['ajax'] == 8) {
+  $return_data = '';
+  $area = $_POST['area'];
+  $company = $_POST['company'];
+  if ($company == '') {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path FROM activity WHERE area = :area ORDER BY start DESC');
+      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $delete_button = '<button id="' . $row['id'] . '" class="remove_activity">削除</button>';
+        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li>' . $delete_button;
+      }
+      echo json_encode($return_data);
+    } catch (PDOException $e) {
+    }
+  } else {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path FROM activity WHERE area = :area AND company = :company ORDER BY start DESC');
+    $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+    $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+    $stmt->execute();
+    foreach ($stmt as $row) {
+      $delete_button = '<button id="' . $row['id'] . '" class="remove_activity">削除</button>';
+      $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $delete_button;
+    }
+    echo json_encode($return_data);
+  }
+  // Remove activity (remove_activity.php)
+} elseif ($_POST['ajax'] == 9) {
+  $id = $_POST['id'];
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM activity WHERE id = :id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     echo json_encode('success');

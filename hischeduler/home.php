@@ -35,11 +35,33 @@ if ($_POST['logout'] == 'ログアウト') {
 
 <body>
   <?php
+  if (isset($_SESSION['NAME'])) {
+    $area = $_SESSION['AREA'];
+    $company = $_SESSION['COM'];
+    $name = $_SESSION['NAME'];
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT permission FROM user WHERE area = :area AND company = :company AND name = :name');
+      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+      $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+      $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $permission = $row['permission'];
+      }
+      $_SESSION['COM_ADMIN'] = $permission;
+    } catch (PDOException $e) {
+      $error[] = $e;
+    }
+  }
+  // ユーザー種ごとの遷移先画面表示
   if ($_SESSION['AREA_ADMIN'] == 1) {
     echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
-  } elseif ($_SESSION['COM_ADMIN']) {
+    echo '<a href="./remove_activity.php" class="admin_link">研修を削除</a>';
+  } elseif ($_SESSION['COM_ADMIN'] == 1) {
     echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
     echo '<a href="./add_activity.php" class="admin_link">研修を追加</a>';
+    echo '<a href="./remove_activity.php" class="admin_link">研修を削除</a>';
   }
   ?>
   <form method="post">

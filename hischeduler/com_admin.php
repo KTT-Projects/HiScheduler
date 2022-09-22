@@ -122,7 +122,7 @@ if ($_SESSION['COM_ADMIN'] != 1) {
 </script>
 
 <body>
-  <a class="home_link" href="./home.php">ホームへ</a>
+  <a class="home_link" href="./home.php">戻る</a>
   <div class="all_users"></div>
 </body>
 
