@@ -40,6 +40,7 @@ if ($_POST['create_area_submit'] == '追加') {
         foreach ($stmt as $row) {
           if ($row['area_name'] == $area_name) {
             $error[] = '既に存在している地域名です。';
+            return false;
           }
         }
       } catch (PDOException $e) {
@@ -174,8 +175,8 @@ if ($_POST['create_area_submit'] == '追加') {
   if ($com_name == '' || $com_name == null || $com_password == '' || $com_password == null || $area_name == '' || $area_name == null) {
     $error[] = '未入力箇所があります。';
   }
-  // Get admin password
   if (empty($error)) {
+    // Get admin password
     try {
       $pdo = new PDO(DSN, DB_USER, DB_PASS);
       $stmt = $pdo->prepare('SELECT admin_password FROM company WHERE area = :area_name AND com_name = :com_name');
@@ -199,7 +200,97 @@ if ($_POST['create_area_submit'] == '追加') {
       $error[] = 'パスワードまたは会社名/地域名が間違っています。';
     }
   }
-  // create_com
+  // Create normal user
+} elseif ($_POST['create_user_submit'] == '追加') {
+  $area = $_POST['create_user_area_name'];
+  $company = $_POST['create_user_com_name'];
+  $name = $_POST['create_user_normal_name'];
+  $password = $_POST['create_user_password'];
+  $com_password = $_POST['create_user_com_password'];
+  $actual_password = '';
+  if ($area == '' || $area == null || $com_password == '' || $com_password == null || $name == '' || $name == null || $password == '' || $password == null || $company == '' || $company == null) {
+    $error[] = '未入力箇所があります。';
+  }
+  if (empty($error)) {
+    if (preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $password)) {
+      $password = password_hash($password, PASSWORD_DEFAULT);
+    } else {
+      $error[] = '個人パスワードは半角英数字をそれぞれ1文字以上含んだ8文字以上で設定してください。';
+    }
+    if (empty($error)) {
+      // Get company password
+      try {
+        $pdo = new PDO(DSN, DB_USER, DB_PASS);
+        $stmt = $pdo->prepare('SELECT com_password FROM company WHERE area = :area AND com_name = :company');
+        $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+        $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+        $stmt->execute();
+        foreach ($stmt as $row) {
+          $actual_password = $row['com_password'];
+        }
+      } catch (PDOException $e) {
+        $error[] = $e;
+      }
+      if (empty($error) && password_verify($com_password, $actual_password)) {
+        // Insert data.
+        try {
+          $pdo = new PDO(DSN, DB_USER, DB_PASS);
+          $stmt = $pdo->prepare('INSERT INTO user (area, company, name, password) VALUES (:area, :company, :name, :password)');
+          $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+          $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+          $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+          $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+          $stmt->execute();
+        } catch (PDOException $e) {
+          $error[] = 'このユーザー名は既に登録されています。';
+        }
+        if (empty($error)) {
+          $_SESSION['LOGGED_IN'] = 1;
+          $_SESSION['COM'] = $company;
+          $_SESSION['AREA'] = $area;
+          $_SESSION['NAME'] = $name;
+          header('Location: ./home.php');
+        }
+      } else {
+        $error[] = 'パスワードまたは会社名/地域名が間違っています。';
+      }
+    }
+  }
+  // Login as normal user
+} elseif ($_POST['login_normal_submit'] == 'ログイン') {
+  $area = $_POST['login_normal_area'];
+  $company = $_POST['login_normal_com'];
+  $name = $_POST['login_normal_name'];
+  $password = $_POST['login_normal_password'];
+  $actual_password = '';
+  if ($area == '' || $area == null || $name == '' || $name == null || $password == '' || $password == null || $company == '' || $company == null) {
+    $error[] = '未入力箇所があります。';
+  }
+  if (empty($error)) {
+    // Get actual password
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT password FROM user WHERE area = :area AND company = :company AND name = :name');
+      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+      $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+      $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $actual_password = $row['password'];
+      }
+    } catch (PDOException $e) {
+      $error[] = $e;
+    }
+    if (empty($error) && password_verify($password, $actual_password)) {
+      $_SESSION['LOGGED_IN'] = 1;
+      $_SESSION['COM'] = $company;
+      $_SESSION['AREA'] = $area;
+      $_SESSION['NAME'] = $name;
+      header('Location: ./home.php');
+    } else {
+      $error[] = 'パスワードまたは会社名/地域名/個人名が間違っています。';
+    }
+  }
 }
 ?>
 <!DOCTYPE html>

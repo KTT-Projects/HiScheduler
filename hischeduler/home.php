@@ -13,7 +13,6 @@ if ($_POST['logout'] == 'ログアウト') {
   $_SESSION = array();
   header('Location: ./index.php');
 }
-// var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -40,6 +39,7 @@ if ($_POST['logout'] == 'ログアウト') {
     echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
   } elseif ($_SESSION['COM_ADMIN']) {
     echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
+    echo '<a href="./add_activity.php" class="admin_link">研修を追加</a>';
   }
   ?>
   <form method="post">

@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 0);
 session_save_path('./session');
 ini_set( 'session.gc_divisor', 1000);
