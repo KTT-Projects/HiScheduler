@@ -55,7 +55,7 @@ if ($_POST['create_area_submit'] == '追加') {
           $stmt->bindParam(':area_password', $area_password, PDO::PARAM_STR);
           $stmt->bindParam(':area_admin', $area_admin, PDO::PARAM_STR);
           $stmt->execute();
-        } catch (PDOException) {
+        } catch (PDOException $e) {
           $error[] = '' . $e . '';
         }
         if (!empty($error)) {
