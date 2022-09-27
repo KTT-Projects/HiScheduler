@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/e4a9507649.js" crossorigin="anonymous"></script>
+    <title>HISCHEDULER | トップ</title>
+</head>
+<body>
+<header>
+    <h1>HISCHEDULER</h1>
+    <h2><a href="https://kttprojects.com">KTT homepage</a></h2>
+</header>
+    <div class="choose">
+        <div class="choose-a"><a href="./tools/calendar.php">Calendar</a></div>
+        <div class="choose-a"><a href="files.php">Files</a></div>
+        <div class="choose-a"><a href="message.php">Message</a></div>
+    </div>
+
+    <div class="wrapper">
+        <!-- xxxx年xx月を表示 -->
+        <h1 id="header"></h1>
+    
+        <!-- ボタンクリックで月移動 -->
+        <div id="next-prev-button">
+            <button id="prev" onclick="prev()">‹</button>
+            <button id="next" onclick="next()">›</button>
+        </div>
+    
+        <!-- カレンダー -->
+        <div id="calendar"></div>
+    </div>
+
+    <footer>
+        <!-- お問い合わせ -->
+    </footer>
+<script type="text/javascript" src="../js/index.js"></script>
+</body>
