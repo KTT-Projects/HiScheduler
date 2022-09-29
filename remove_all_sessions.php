@@ -1,5 +1,0 @@
-<?php
-require_once('./config.php');
-session_start();
-$_SESSION = array();
-header('Location: ./index.php');
