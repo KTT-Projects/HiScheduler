@@ -111,9 +111,34 @@ if ($_SESSION['COM_ADMIN'] != 1) {
           get_users();
         });
     }
+    // Delete company
+    function delete_company() {
+      let data2 = {
+        'ajax': 2,
+        'company': '<?php echo $_SESSION['COM'] ?>'
+      }
+      $.ajax({
+          dataType: 'json',
+          url: './data.php',
+          type: 'post',
+          data: data2
+        })
+        .done(function(data, dataType) {
+          if (data == 'success') {
+            location.href = './remove_all_sessions.php';
+          }
+        });
+    }
+    // 会社削除がクリックされたとき
+    $('.delete_company').click(function() {
+      if (confirm('本当に会社を削除しますか？')) {
+        delete_company();
+      }
+    });
     // 初期実行
     get_users();
     clicks();
+    delete_company_click();
     // 定期実行
     setInterval(() => {
       get_users();
@@ -124,6 +149,7 @@ if ($_SESSION['COM_ADMIN'] != 1) {
 <body>
   <a class="home_link" href="./home.php">戻る</a>
   <div class="all_users"></div>
+  <button class="delete_company">会社を削除</button>
 </body>
 
 </html>

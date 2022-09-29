@@ -61,7 +61,7 @@ if ($_POST['logout'] == 'ログアウト') {
   } elseif ($_SESSION['COM_ADMIN'] == 1) {
     echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
     echo '<a href="./add_activity.php" class="admin_link">研修を追加</a>';
-    echo '<a href="./remove_activity.php" class="admin_link">研修を削除</a>';
+    echo '<a href="./manage_activity.php" class="admin_link">研修を管理</a>';
   }
   ?>
   <form method="post">

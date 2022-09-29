@@ -16,13 +16,49 @@ if ($_POST['ajax'] == 1) {
     echo json_encode($return_data);
   } catch (PDOException $e) {
   }
-  // Delete company (area_admin.php)
+  // Delete company (area_admin.php, com_admin.php)
 } elseif ($_POST['ajax'] == 2) {
   $id = $_POST['id'];
+  $company = '';
+  if (isset($_POST['company'])) {
+    $company = $_POST['company'];
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('DELETE FROM company WHERE com_name = :company');
+      $stmt->bindParam(':company', $company, PDO::PARAM_INT);
+      $stmt->execute();
+    } catch (PDOException $e) {
+    }
+  } else {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT com_name FROM company WHERE id = :id');
+      $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $company = $row['com_name'];
+      }
+    } catch (PDOException $e) {
+    }
+  }
   try {
     $pdo = new PDO(DSN, DB_USER, DB_PASS);
     $stmt = $pdo->prepare('DELETE FROM company WHERE id = :id');
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+  } catch (PDOException $e) {
+  }
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM user WHERE company = :company');
+    $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+    $stmt->execute();
+  } catch (PDOException $e) {
+  }
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('DELETE FROM activity WHERE company = :company');
+    $stmt->bindParam(':company', $company, PDO::PARAM_STR);
     $stmt->execute();
     echo json_encode('success');
   } catch (PDOException $e) {
@@ -150,7 +186,7 @@ if ($_POST['ajax'] == 1) {
     }
     echo json_encode($return_data);
   }
-  // Remove activity (remove_activity.php)
+  // Remove activity (manage_activity.php)
 } elseif ($_POST['ajax'] == 9) {
   $id = $_POST['id'];
   try {

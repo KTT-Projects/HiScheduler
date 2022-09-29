@@ -4,6 +4,7 @@ $error = array();
 // Import default settings
 require_once('./config.php');
 session_start();
+$_SESSION['test'] = 4;
 // If already logged in, redirect to home.php
 if ($_SESSION['LOGGED_IN'] == 1) {
   header('Location: ./home.php');
@@ -58,7 +59,7 @@ if ($_POST['create_area_submit'] == '追加') {
         } catch (PDOException $e) {
           $error[] = '' . $e . '';
         }
-        if (!empty($error)) {
+        if (empty($error)) {
           return false;
         } else {
           $_SESSION['LOGGED_IN'] = 1;
