@@ -57,11 +57,13 @@ if ($_POST['logout'] == 'ログアウト') {
   // ユーザー種ごとの遷移先画面表示
   if ($_SESSION['AREA_ADMIN'] == 1) {
     echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
-    echo '<a href="./remove_activity.php" class="admin_link">研修を削除</a>';
+    echo '<a href="./manage_activity.php" class="admin_link">研修を管理</a>';
   } elseif ($_SESSION['COM_ADMIN'] == 1) {
     echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
     echo '<a href="./add_activity.php" class="admin_link">研修を追加</a>';
     echo '<a href="./manage_activity.php" class="admin_link">研修を管理</a>';
+  } else {
+    echo '<a href="./manage_participation.php" class="admin_link">参加する研修の管理</a>';
   }
   ?>
   <form method="post">
