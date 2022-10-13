@@ -6,21 +6,23 @@
     <link rel="stylesheet" href="css/index.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/e4a9507649.js" crossorigin="anonymous"></script>
-    <title>HISCHEDULER | トップ</title>
+    <!-- HiSchedulerのロゴほしい -->
+    <title>HiScheduler | トップ</title>
 </head>
 <body>
 <header>
-    <h1>HISCHEDULER</h1>
-    <h2><a href="https://kttprojects.com">KTT homepage</a></h2>
+    <h1><a href="index.html">HiScheduler</a></h1>
 </header>
     <div class="choose">
         <div class="choose-a"><a href="./tools/calendar.php">Calendar</a></div>
-        <div class="choose-a"><a href="files.php">Files</a></div>
-        <div class="choose-a"><a href="message.php">Message</a></div>
+        <!-- マーシュのファイルに変える -->
+        <div class="choose-a"><a href="add_activity.php">Add activity</a></div>
+        <!-- <div class="choose-a"><a href="./tools/message.php">Posting</a></div> -->
+        <div class="choose-a"><a href="https://kttprojects.com">KTT homepage</a></div>
     </div>
 
     <div class="wrapper">
-        <!-- xxxx年xx月を表示 -->
+        <!-- 年月を表示 -->
         <h1 id="header"></h1>
     
         <!-- ボタンクリックで月移動 -->
@@ -31,10 +33,56 @@
     
         <!-- カレンダー -->
         <div id="calendar"></div>
-    </div>
+        </div>
 
+        <!-- 必要かわかんない -->
+    <div class="information">
+        <h1>Information</h1>
+        <p>テストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテスト</p>
+    </div>
+    
     <footer>
-        <!-- お問い合わせ -->
+        <section class="f-section1">
+            <div class="f-page">
+                <p><a href="">KTT Projectsとは</a></p>
+                <p><a href="">活動内容</a></p>
+                <p><a href="">実績</a></p>
+            </div>
+            <div class="f-page">
+                <p><a href="">よくあるお問い合わせ</a></p>
+                <p><a href="">お問い合わせ</a></p>
+            </div>
+            <div class="f-page">
+                <p><a href="">ログイン</a></p>
+                <p><a href="">マイページ</a></p>
+                <p><a href="">アカウント設定</a></p>
+                <br>
+                <div id="admin">
+                <p><button type="button" class="admin_popup">管理者</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="f-section2">
+            <div class="writing f-under">
+                <p class="copyright">Copyright ©︎ 2022 KTT Projects.</p>
+                <p><a href="">　利用規約</a></p>
+                <p><a href="">　プライバシーポリシー</a></p>
+            </div>
+            <div class="f-icon f-under">
+                <a href="https://m.youtube.com/channel/UCihqEDqGrLOOrs0o-IBulqw"><i class="fa-brands fa-youtube f-youtube"></i></a>
+            </div>
+        </section>
     </footer>
+    <!-- 見栄え悪いからたすぴー頼む -->
 <script type="text/javascript" src="../js/index.js"></script>
+<!-- <script>
+    window.onload = function () {
+    var el = document.querySelector(".click");
+    el.onclick = Imada;
+}
+
+function Imada() {
+    window.location.href = './TMP-Imada.html';
+}
+</script> -->
 </body>
