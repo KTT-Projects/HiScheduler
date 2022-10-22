@@ -20,7 +20,9 @@ if ($_POST['logout'] == 'ログアウト') {
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="./css/calendar.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/e4a9507649.js" crossorigin="anonymous"></script>
   <link rel="manifest" href="./manifest.json">
   <link rel="shortcut icon" href="./images/logo256.png">
   <script src="./jquery.js"></script>
@@ -54,21 +56,62 @@ if ($_POST['logout'] == 'ログアウト') {
       $error[] = $e;
     }
   }
-  // ユーザー種ごとの遷移先画面表示
-  if ($_SESSION['AREA_ADMIN'] == 1) {
-    echo '<a href="./area_admin.php" class="admin_link">地域管理ページ</a>';
-    echo '<a href="./manage_activity.php" class="admin_link">研修を管理</a>';
-  } elseif ($_SESSION['COM_ADMIN'] == 1) {
-    echo '<a href="./com_admin.php" class="admin_link">会社管理ページ</a>';
-    echo '<a href="./add_activity.php" class="admin_link">研修を追加</a>';
-    echo '<a href="./manage_activity.php" class="admin_link">研修を管理</a>';
-  } else {
-    echo '<a href="./manage_participation.php" class="admin_link">参加する研修の管理</a>';
-  }
   ?>
+
+  <header>
+    <h1><a href="./">HiScheduler</a></h1>
+  </header>
+  <div class="choose">
+    <?php
+    if ($_SESSION['COM_ADMIN'] == 1) {
+      echo '<div class="choose-a"><a href="com_admin.php">会社管理ページ</a></div>';
+      echo '<div class="choose-a"><a href="add_activity.php">研修を追加</a></div>';
+      echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
+    } elseif ($_SESSION['AREA_ADMIN'] == 1) {
+      echo '<div class="choose-a"><a href="area_admin.php">地域管理ページ</a></div>';
+      echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
+    }
+    ?>
+  </div>
+  <div class="wrapper">
+    <!-- 年月を表示 -->
+    <h1 id="header"></h1>
+    <!-- ボタンクリックで月移動 -->
+    <div id="next-prev-button">
+      <button id="prev" onclick="prev()">‹</button>
+      <button id="next" onclick="next()">›</button>
+    </div>
+    <!-- カレンダー -->
+    <div id="calendar"></div>
+  </div>
+
   <form method="post">
     <input type="submit" value="ログアウト" name="logout">
   </form>
+  <footer>
+    <section class="f-section1">
+      <div class="f-page">
+        <p><a href="https://kttprojects.com/homepage/">KTT Projectsとは</a></p>
+        <p><a href="https://kttprojects.com/homepage/">活動内容</a></p>
+        <p><a href="https://kttprojects.com/homepage/">実績</a></p>
+      </div>
+      <div class="f-page">
+        <p><a href="https://kttprojects.com/homepage/">よくあるお問い合わせ</a></p>
+        <p><a href="https://kttprojects.com/homepage/">お問い合わせ</a></p>
+      </div>
+    </section>
+    <section class="f-section2">
+      <div class="writing f-under">
+        <p><a href="https://kttprojects.com/homepage/">利用規約</a></p>
+        <p><a href="https://kttprojects.com/homepage/">プライバシーポリシー</a></p>
+        <div class="f-icon f-under">
+          <a href="https://m.youtube.com/channel/UCihqEDqGrLOOrs0o-IBulqw"><i class="fa-brands fa-youtube f-youtube"></i></a>
+        </div>
+        <p class="copyright">Copyright ©︎ 2022 KTT Projects.</p>
+      </div>
+    </section>
+  </footer>
+  <script type="text/javascript" src="./js/index.js"></script>
 </body>
 
 </html>
