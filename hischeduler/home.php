@@ -30,9 +30,37 @@ if ($_POST['logout'] == 'ログアウト') {
 </head>
 
 <script>
-  $(document).ready(function() {
-
-  });
+  let activity_data;
+  // 研修取得処理
+  function get_activities() {
+    let company;
+    company = '<?php if (isset($_SESSION['COM'])) {
+                  echo $_SESSION['COM'];
+                } ?>';
+    let area = '<?php echo $_SESSION['AREA'] ?>';
+    let data13 = {
+      'ajax': 13,
+      'area': area,
+      'company': company,
+    }
+    $.ajax({
+        dataType: 'json',
+        url: './data.php',
+        type: 'post',
+        data: data13
+      })
+      .done(function(data, dataType) {
+        activity_data = data;
+      });
+  }
+  // クリック時処理アップデート
+  function activity_click() {
+    // 後でやる
+  }
+  get_activities();
+  setInterval(() => {
+    get_activities();
+  }, 3000);
 </script>
 
 <body>
@@ -73,6 +101,7 @@ if ($_POST['logout'] == 'ログアウト') {
     }
     ?>
   </div>
+  <div class="popup"></div>
   <div class="wrapper">
     <!-- 年月を表示 -->
     <h1 id="header"></h1>
@@ -112,6 +141,9 @@ if ($_POST['logout'] == 'ログアウト') {
     </section>
   </footer>
   <script type="text/javascript" src="./js/index.js"></script>
+  <script>
+    // // 研修データ取得
+  </script>
 </body>
 
 </html>

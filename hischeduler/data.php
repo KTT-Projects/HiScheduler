@@ -270,4 +270,64 @@ if ($_POST['ajax'] == 1) {
     echo json_encode($participated);
   } catch (PDOException $e) {
   }
+} elseif ($_POST['ajax'] == 13) {
+  $return_data = [];
+  $area = $_POST['area'];
+  $company = $_POST['company'];
+  if ($company == '') {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path, company FROM activity WHERE area = :area ORDER BY start DESC');
+      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $date_time = new DateTime($row['start']);
+        $day = $date_time->format('d');
+        $month = $date_time->format('m');
+        $year = $date_time->format('Y');
+        $return_data[] = [
+          'id' => $row['id'],
+          'company' => $row['company'],
+          'name' => $row['name'],
+          'start' => $row['start'],
+          'end' => $row['end'],
+          'details' => $row['details'],
+          'path' => $row['pdf_path'],
+          'day' => $day,
+          'month' => $month,
+          'year' => $year
+        ];
+      }
+      echo json_encode($return_data);
+    } catch (PDOException $e) {
+    }
+  } else {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path, company FROM activity WHERE area = :area AND company = :company ORDER BY start DESC');
+      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+      $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+      $stmt->execute();
+      foreach ($stmt as $row) {
+        $date_time = new DateTime($row['start']);
+        $day = $date_time->format('d');
+        $month = $date_time->format('m');
+        $year = $date_time->format('Y');
+        $return_data[] = [
+          'id' => $row['id'],
+          'company' => $row['company'],
+          'name' => $row['name'],
+          'start' => $row['start'],
+          'end' => $row['end'],
+          'details' => $row['details'],
+          'path' => $row['pdf_path'],
+          'day' => $day,
+          'month' => $month,
+          'year' => $year
+        ];
+      }
+      echo json_encode($return_data);
+    } catch (PDOException $e) {
+    }
+  }
 }
