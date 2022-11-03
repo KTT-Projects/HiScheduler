@@ -154,7 +154,7 @@ if ($_POST['ajax'] == 1) {
     echo json_encode('success');
   } catch (PDOException $e) {
   }
-  // Getting all activities (remove_activity.php)
+  // Getting all activities (manage_activity.php)
 } elseif ($_POST['ajax'] == 8) {
   $return_data = '';
   $area = $_POST['area'];
@@ -162,12 +162,12 @@ if ($_POST['ajax'] == 1) {
   if ($company == '') {
     try {
       $pdo = new PDO(DSN, DB_USER, DB_PASS);
-      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path FROM activity WHERE area = :area ORDER BY start DESC');
+      $stmt = $pdo->prepare('SELECT id, name, company, start, end, details, pdf_path FROM activity WHERE area = :area ORDER BY start DESC');
       $stmt->bindParam(':area', $area, PDO::PARAM_STR);
       $stmt->execute();
       foreach ($stmt as $row) {
         $delete_button = '<button id="' . $row['id'] . '" class="remove_activity">削除</button>';
-        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li>' . $delete_button;
+        $return_data = $return_data . '<ul class="activity_container"><li class="activity_company">' . $row['company'] . '</li><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $delete_button;
       }
       echo json_encode($return_data);
     } catch (PDOException $e) {
@@ -225,12 +225,12 @@ if ($_POST['ajax'] == 1) {
   foreach ($ids as $id) {
     try {
       $pdo = new PDO(DSN, DB_USER, DB_PASS);
-      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path FROM activity WHERE id = :id ORDER BY start DESC');
+      $stmt = $pdo->prepare('SELECT id, company, name, start, end, details, pdf_path FROM activity WHERE id = :id ORDER BY start DESC');
       $stmt->bindParam(':id', $id, PDO::PARAM_STR);
       $stmt->execute();
       foreach ($stmt as $row) {
         $cancel_button = '<button id="' . $row['id'] . '" class="cancel_activity">キャンセル</button>';
-        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $cancel_button;
+        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['company'] . '</li><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $cancel_button;
       }
     } catch (PDOException $e) {
     }
@@ -270,64 +270,74 @@ if ($_POST['ajax'] == 1) {
     echo json_encode($participated);
   } catch (PDOException $e) {
   }
+  // 研修取得処理 (home.php)
 } elseif ($_POST['ajax'] == 13) {
   $return_data = [];
   $area = $_POST['area'];
   $company = $_POST['company'];
-  if ($company == '') {
-    try {
-      $pdo = new PDO(DSN, DB_USER, DB_PASS);
-      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path, company FROM activity WHERE area = :area ORDER BY start DESC');
-      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
-      $stmt->execute();
-      foreach ($stmt as $row) {
-        $date_time = new DateTime($row['start']);
-        $day = $date_time->format('d');
-        $month = $date_time->format('m');
-        $year = $date_time->format('Y');
-        $return_data[] = [
-          'id' => $row['id'],
-          'company' => $row['company'],
-          'name' => $row['name'],
-          'start' => $row['start'],
-          'end' => $row['end'],
-          'details' => $row['details'],
-          'path' => $row['pdf_path'],
-          'day' => $day,
-          'month' => $month,
-          'year' => $year
-        ];
-      }
-      echo json_encode($return_data);
-    } catch (PDOException $e) {
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path, company FROM activity WHERE area = :area ORDER BY start DESC');
+    $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+    $stmt->execute();
+    foreach ($stmt as $row) {
+      $date_time = new DateTime($row['start']);
+      $day = $date_time->format('d');
+      $month = $date_time->format('m');
+      $year = $date_time->format('Y');
+      $return_data[] = [
+        'id' => $row['id'],
+        'company' => $row['company'],
+        'name' => $row['name'],
+        'start' => $row['start'],
+        'end' => $row['end'],
+        'details' => $row['details'],
+        'path' => $row['pdf_path'],
+        'day' => $day,
+        'month' => $month,
+        'year' => $year
+      ];
     }
+    echo json_encode($return_data);
+  } catch (PDOException $e) {
+  }
+  // 研修参加処理
+} elseif ($_POST['ajax'] == 14) {
+  $area = $_POST['area'];
+  $com = $_POST['com'];
+  $name = $_POST['name'];
+  $id = $_POST['id'];
+  $user_id;
+  $history;
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('SELECT id, history FROM user WHERE area = :area AND company = :com AND name = :name');
+    $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+    $stmt->bindParam(':com', $com, PDO::PARAM_STR);
+    $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+    $stmt->execute();
+    foreach ($stmt as $row) {
+      $user_id = $row['id'];
+      $history = $row['history'];
+    }
+  } catch (PDOException $e) {
+    echo json_encode('error');
+  }
+  $history_array = explode(',', $history);
+  $history = $history . $id . ',';
+  array_pop($history_array);
+  if (in_array((string)$id, $history_array)) {
+    echo json_encode('already joined');
   } else {
     try {
       $pdo = new PDO(DSN, DB_USER, DB_PASS);
-      $stmt = $pdo->prepare('SELECT id, name, start, end, details, pdf_path, company FROM activity WHERE area = :area AND company = :company ORDER BY start DESC');
-      $stmt->bindParam(':area', $area, PDO::PARAM_STR);
-      $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+      $stmt = $pdo->prepare('UPDATE user SET history = :history WHERE id = :id');
+      $stmt->bindParam(':history', $history, PDO::PARAM_STR);
+      $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
       $stmt->execute();
-      foreach ($stmt as $row) {
-        $date_time = new DateTime($row['start']);
-        $day = $date_time->format('d');
-        $month = $date_time->format('m');
-        $year = $date_time->format('Y');
-        $return_data[] = [
-          'id' => $row['id'],
-          'company' => $row['company'],
-          'name' => $row['name'],
-          'start' => $row['start'],
-          'end' => $row['end'],
-          'details' => $row['details'],
-          'path' => $row['pdf_path'],
-          'day' => $day,
-          'month' => $month,
-          'year' => $year
-        ];
-      }
-      echo json_encode($return_data);
+      echo json_encode('success');
     } catch (PDOException $e) {
+      echo json_encode('error');
     }
   }
 }

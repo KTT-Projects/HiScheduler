@@ -53,11 +53,64 @@ if ($_POST['logout'] == 'ログアウト') {
         activity_data = data;
       });
   }
+  // 研修参加処理
+  function join_activity(id) {
+    if (confirm('この活動に参加しますか？')) {
+      let area = '<?php echo $_SESSION['AREA'] ?>';
+      let com = '<?php echo $_SESSION['COM'] ?>';
+      let name = '<?php echo $_SESSION['NAME'] ?>';
+      let data14 = {
+        'ajax': 14,
+        'area': area,
+        'com': com,
+        'name': name,
+        'id': id,
+      }
+      $.ajax({
+          dataType: 'json',
+          url: './data.php',
+          type: 'post',
+          data: data14
+        })
+        .done(function(data, dataType) {
+          if (data == 'error') {
+            alert("エラー：活動に参加できませんでした");
+          }
+          if (data == 'already joined') {
+            alert("この活動にはすでに参加しています");
+          }
+        });
+    }
+  }
   // クリック時処理アップデート
   function activity_click() {
-    // 後でやる
+    let com_admin = '<?php echo $_SESSION['COM_ADMIN'] ?>';
+    let area_admin = '<?php echo $_SESSION['AREA_ADMIN'] ?>';
+    let normal_user = '<?php if (empty($_SESSION['NAME'])) {
+                          echo '1';
+                        }
+                        ?>';
+    if ((com_admin == '1' && normal_user == '1') || area_admin == '1') {
+      $('.activity_join_button').remove();
+    }
+  }
+  // 詳細クリック時
+  function open_spec(id) {
+    id = '#' + id + '_';
+    if ($(id).html() == '閉じる') {
+      $(id).html('詳細')
+      id = id + 'closed';
+      $(id).hide();
+    } else {
+      $(id).html('閉じる')
+      id = id + 'closed';
+      $(id).show();
+    }
   }
   get_activities();
+  setTimeout(() => {
+    activity_click();
+  }, 1050);
   setInterval(() => {
     get_activities();
   }, 3000);
@@ -98,6 +151,9 @@ if ($_POST['logout'] == 'ログアウト') {
     } elseif ($_SESSION['AREA_ADMIN'] == 1) {
       echo '<div class="choose-a"><a href="area_admin.php">地域管理ページ</a></div>';
       echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
+    }
+    if (isset($_SESSION['NAME'])) {
+      echo '<div class="choose-a"><a href="manage_participation.php">参加研修の管理</a></div>';
     }
     ?>
   </div>

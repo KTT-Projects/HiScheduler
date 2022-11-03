@@ -19,7 +19,7 @@ if ($_POST['add_activity_submit'] == '追加') {
     function upload_pdf($path)
     {
       if (move_uploaded_file($_FILES['activity_pdf']['tmp_name'], $path)) {
-        chmod($path, 0644);
+        chmod($path, 0666);
       }
     }
     if (is_uploaded_file($_FILES['activity_pdf']['tmp_name'])) {
