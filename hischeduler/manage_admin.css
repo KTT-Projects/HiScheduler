@@ -1,0 +1,133 @@
+:root {
+  --error-red: #fe3a31;
+  --accent-pink: #ff00b3;
+  --accent-yellow: #fbd429;
+}
+
+body {
+  margin: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+body>a {
+  width: 100px;
+  margin-bottom: 30px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 100vh;
+  color: #f9f9f9;
+  background: linear-gradient(120deg, var(--accent-pink) 10%, var(--accent-yellow));
+}
+
+.activity_container li {
+  margin: 2px 0;
+}
+
+.activities .pdf {
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: solid 0.5px #000;
+}
+
+.activities button {
+  padding: 5px 15px;
+  display: block;
+  margin: 10px auto;
+  border-radius: 100vh;
+  background: var(--error-red);
+  color: #f9f9f9;
+}
+
+.all_users {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.all_users p {
+  margin-bottom: 5px;
+}
+
+.all_users p~button {
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: solid 0.5px #000;
+}
+
+.delete_company {
+  margin: 10px;
+  padding: 5px 15px;
+  display: block;
+  border-radius: 100vh;
+  background: var(--error-red);
+  color: #f9f9f9;
+}
+
+.companies {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.companies li {
+  font-size: 18px;
+}
+
+.remove_company {
+  margin: 10px;
+  padding: 5px 15px;
+  display: block;
+  border-radius: 100vh;
+  background: var(--error-red);
+  color: #f9f9f9;
+}
+
+.delete_area {
+  margin: 10px;
+  margin-top: 30px;
+  padding: 5px 15px;
+  display: block;
+  border-radius: 100vh;
+  background: var(--error-red);
+  color: #f9f9f9;
+}
+
+.modalArea {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  /*サイトによってここの数値は調整 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modalBg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(30, 30, 30, 0.9);
+}
+
+.modalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  padding: 10px 30px;
+  background-color: #fff;
+}
+
+.closeModal {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  cursor: pointer;
+}

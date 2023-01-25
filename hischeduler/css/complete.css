@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+a {
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px #E9934C solid;
+}
+footer {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    background-color: #D4D4D4;
+    margin-top: 30px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+footer p {
+    font-size: 13px;
+    line-height: 30px;
+    margin-top: 0;
+}

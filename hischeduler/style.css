@@ -1,0 +1,328 @@
+/* #FF00B3 #FBD429 */
+@import url("//fonts.googleapis.com/earlyaccess/notosansjapanese.css");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+*,
+*::placeholder {
+  font-family: "Noto Sans Japanese";
+  font-weight: 200;
+}
+
+:root {
+  --error-red: #fe3a31;
+  --accent-pink: #ff00b3;
+  --accent-yellow: #fbd429;
+  --shadow: 1px 3px 5px #00000033;
+  --dark-background: radial-gradient(circle at left top, #1f1f1f, #111);
+  --light-background: radial-gradient(circle at left top, #fcfcfc, #e3e3e3);
+  --form-width: calc(100vw - 13vmin - 54vw);
+}
+
+body {
+  margin: 4vmin;
+  display: grid;
+  place-content: center;
+  background: #f9f9f9;
+  background: var(--dark-background);
+  background: var(--light-background);
+}
+
+input {
+  display: block;
+}
+
+ul.error_container {
+  margin-top: -30px;
+  width: 99vw;
+  height: 30px;
+  display: grid;
+  place-content: center;
+  grid-template-columns: 1fr 30px;
+  background: var(--error-red);
+  color: #fff;
+  transition: transform 300ms ease-out, margin 300ms ease-out;
+}
+
+ul.error_container li {
+  padding-left: 5px;
+}
+
+ul.error_container button {
+  text-align: center;
+  font-weight: 400;
+}
+
+ul.error_container_active {
+  margin: -15px 0;
+  transform: scaleY(0);
+}
+
+.all {
+  width: calc(100vw - 8vmin);
+  height: calc(100vh - 8vmin);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+  place-content: center;
+  gap: 5vmin;
+}
+
+.icon {
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon img {
+  width: 18vw;
+  filter: drop-shadow(var(--shadow));
+}
+
+.icon h1 {
+  position: relative;
+  font-size: 6vw;
+  font-family: "Roboto";
+  font-weight: 400;
+  color: transparent;
+  background: linear-gradient(
+    120deg,
+    var(--accent-pink),
+    var(--accent-yellow) 90%
+  );
+  background-position: center center;
+  background-size: 120% 120%;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.icon h1::before {
+  content: "Hi Scheduler";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  text-shadow: var(--shadow);
+}
+#F {
+  display: none;
+}
+.administrator {
+  display: none;
+}
+.F {
+  display: inline-block;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-pink));
+  box-shadow: var(--shadow);
+  color: #f7f7f7;
+  width: 60%;
+  border-radius: 20px;
+  margin: 0px auto;
+}
+#F:checked+label+.administrator {
+  display: inline-block;
+}
+
+#G {
+  display: none;
+}
+.administrator_2 {
+  display: none;
+}
+.G {
+  display: inline-block;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-pink));
+  box-shadow: var(--shadow);
+  color: #f7f7f7;
+  width: 60%;
+  border-radius: 20px;
+  margin: 0px auto;
+}
+#G:checked+label+.administrator_2 {
+  display: inline-block;
+}
+
+
+.form {
+  width: var(--form-width);
+  max-height: 90vh;
+  margin: 2vw;
+  padding: 3vw;
+  border-radius: 5vmin;
+  background: var(--light-background);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.form > div {
+  margin: 20px;
+}
+
+.form > div * {
+  transition: all 500ms ease;
+}
+
+.form > div > button ~ div {
+  margin: 0 auto;
+  height: 0px;
+  width: calc(var(--form-width) * 0.9);
+  width: 25vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  translate: 0 5px;
+}
+
+.form > h3 {
+  position: relative;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form > div > button {
+  position: relative;
+  width: 20vw;
+  height: 40px;
+  border-radius: 50vw;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.form > div button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--accent-yellow) 10%,
+    var(--accent-pink)
+  );
+  z-index: 1;
+  transition: all 500ms ease;
+}
+
+.form > div button span {
+  position: absolute;
+  inset: 0;
+  font-size: 18px;
+  color: #f7f7f7;
+  line-height: 40px;
+  z-index: 2;
+}
+
+.form > div button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  border-right: solid 1.5px #f7f7f7;
+  border-bottom: solid 1.5px #f7f7f7;
+  transform: translateY(-75%) rotateZ(45deg);
+  transition: all 500ms ease;
+  z-index: 2;
+}
+
+.youngest {
+  margin: 5% 0;
+}
+
+.youngest h2 {
+  margin-bottom: 4%;
+}
+
+.youngest form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.youngest form input:not(input[type="submit"]) {
+  width: min(60%, 350px);
+  border-radius: 5px;
+  padding: 3px;
+  box-shadow: inset 0 0.5px 3px #00000044;
+}
+
+.youngest form input[type="submit"] {
+  width: 40%;
+  padding: 3px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-pink));
+  box-shadow: var(--shadow);
+  color: #f7f7f7;
+}
+
+.form > div button.open::before {
+  opacity: 0;
+}
+
+.form > div button.open span {
+  color: #000;
+  font-size: 20px;
+}
+
+.form > div button.open::after {
+  border-right: solid 1.5px #000;
+  border-bottom: solid 1.5px #000;
+  transform: translateY(-25%) rotateZ(225deg);
+}
+
+.form > div button.open ~ div {
+  height: 50vh;
+}
+
+@media screen and (max-width: 775px) {
+  body {
+    margin: 0;
+  }
+
+  .all {
+    margin: 0;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    margin: 15vh 0 10vh;
+    width: 80vw;
+  }
+
+  .icon img {
+    width: 30vw;
+  }
+
+  .icon h1 {
+    font-size: 10vw;
+  }
+
+  .form {
+    width: 70vw;
+    margin-bottom: 5vh;
+  }
+
+  .form > div > button ~ div {
+    width: 60vw;
+  }
+
+  .form > div > button {
+    width: 80%;
+  }
+}

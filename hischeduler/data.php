@@ -116,7 +116,7 @@ if ($_POST['ajax'] == 1) {
       } else {
         $permission_button = '<button id="' . $row['id'] . '" class="unpermission_user">組織アカウント権限を剥奪する</button>';
       }
-      $return_data = $return_data . '<li class="user">' . $row['name'] . '</li>' . $delete_button . $permission_button;
+      $return_data = $return_data . '<p class="user">' . $row['name'] . '</p>' . $delete_button . $permission_button;
     }
     echo json_encode($return_data);
   } catch (PDOException $e) {
@@ -156,7 +156,7 @@ if ($_POST['ajax'] == 1) {
   }
   // Getting all activities (manage_activity.php)
 } elseif ($_POST['ajax'] == 8) {
-  $return_data = '';
+  $return_data = [];
   $area = $_POST['area'];
   $company = $_POST['company'];
   if ($company == '') {
@@ -166,8 +166,15 @@ if ($_POST['ajax'] == 1) {
       $stmt->bindParam(':area', $area, PDO::PARAM_STR);
       $stmt->execute();
       foreach ($stmt as $row) {
-        $delete_button = '<button id="' . $row['id'] . '" class="remove_activity">削除</button>';
-        $return_data = $return_data . '<ul class="activity_container"><li class="activity_company">' . $row['company'] . '</li><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $delete_button;
+        $return_data[] = [
+          'id' => $row['id'],
+          'company' => $row['company'],
+          'name' => $row['name'],
+          'start' => $row['start'],
+          'end' => $row['end'],
+          'details' => $row['details'],
+          'pdf_path' => $row['pdf_path'],
+        ];
       }
       echo json_encode($return_data);
     } catch (PDOException $e) {
@@ -180,8 +187,15 @@ if ($_POST['ajax'] == 1) {
       $stmt->bindParam(':company', $company, PDO::PARAM_STR);
       $stmt->execute();
       foreach ($stmt as $row) {
-        $delete_button = '<button id="' . $row['id'] . '" class="remove_activity">削除</button>';
-        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $delete_button;
+        $return_data[] = [
+          'id' => $row['id'],
+          'company' => $row['company'],
+          'name' => $row['name'],
+          'start' => $row['start'],
+          'end' => $row['end'],
+          'details' => $row['details'],
+          'pdf_path' => $row['pdf_path'],
+        ];
       }
       echo json_encode($return_data);
     } catch (PDOException $e) {
@@ -229,8 +243,8 @@ if ($_POST['ajax'] == 1) {
       $stmt->bindParam(':id', $id, PDO::PARAM_STR);
       $stmt->execute();
       foreach ($stmt as $row) {
-        $cancel_button = '<button id="' . $row['id'] . '" class="cancel_activity">キャンセル</button>';
-        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['company'] . '</li><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $cancel_button;
+        $cancel_button = '<button id="' . $row['id'] . '" class="cancel_activity">参加をキャンセル</button>';
+        $return_data = $return_data . '<ul class="activity_container"><li class="activity_name">' . $row['company'] . '</li><li class="activity_name">' . $row['name'] . '</li><li class="activity_start">開始：' . $row['start'] . '</li><li class="activity_end">終了：' . $row['end'] . '</li><li class="activity_details">概要：' . $row['details'] . '</li><li class="activity_end"><a class="pdf" href="' . $row['pdf_path'] . '">PDF</a></li></ul>' . $cancel_button;
       }
     } catch (PDOException $e) {
     }
@@ -309,6 +323,40 @@ if ($_POST['ajax'] == 1) {
   $id = $_POST['id'];
   $user_id;
   $history;
+  try {
+    $pdo = new PDO(DSN, DB_USER, DB_PASS);
+    $stmt = $pdo->prepare('SELECT id, history FROM user WHERE area = :area AND company = :com AND name = :name');
+    $stmt->bindParam(':area', $area, PDO::PARAM_STR);
+    $stmt->bindParam(':com', $com, PDO::PARAM_STR);
+    $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+    $stmt->execute();
+    foreach ($stmt as $row) {
+      $user_id = $row['id'];
+      $history = $row['history'];
+    }
+  } catch (PDOException $e) {
+    echo json_encode('error');
+  }
+  $history_array = explode(',', $history);
+  $history = $history . $id . ',';
+  array_pop($history_array);
+  if (in_array((string)$id, $history_array)) {
+    echo json_encode('already joined');
+  } else {
+    try {
+      $pdo = new PDO(DSN, DB_USER, DB_PASS);
+      $stmt = $pdo->prepare('UPDATE user SET history = :history WHERE id = :id');
+      $stmt->bindParam(':history', $history, PDO::PARAM_STR);
+      $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+      $stmt->execute();
+      echo json_encode('success');
+    } catch (PDOException $e) {
+      echo json_encode('error');
+    }
+  }
+  // 研修情報をIDから (manage_activity.php)
+} elseif ($_POST['ajax'] == 15) {
+  $id = $_POST['id'];
   try {
     $pdo = new PDO(DSN, DB_USER, DB_PASS);
     $stmt = $pdo->prepare('SELECT id, history FROM user WHERE area = :area AND company = :com AND name = :name');

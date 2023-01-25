@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Main";
+}
+@font-face {
+    font-family: "Main";
+    src: url(../font/piko.woff);
+    src: url(../font/rkm.otf);
+}
+header {
+    display: flex;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+header img {
+    width: 60px;
+}
+header h1 {
+    font-size: 20px;
+    line-height: 60px;
+    margin-left: 10px;
+}
+form h1 {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+input[type="text"],input[type="email"],textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    font: inherit;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+}
+form {
+    width: 390px;
+    margin: 0 auto;
+}
+.form_area {
+    height: 600px;
+}
+.input-area {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.input-area p {
+    margin-bottom: 5px;
+}
+input[type="text"],input[type="email"],select {
+    width: 390px;
+    height: 30px;
+    border-bottom: 1px black solid;
+    padding-left: 10px;
+    font-size: 15px;
+}
+input[type="text"]:focus,input[type="email"]:focus,select:focus {
+    border-bottom: 1px #E9934C solid;
+    transition: 0.5s;
+}
+textarea {
+    width: 390px;
+    border-left: 1px black solid;
+    max-width: 390px;
+    max-height: 180px;
+    min-height: 50px;
+    padding: 10px;
+    margin-top: 10px;
+}
+textarea:focus {
+    border-left: 1px #E9934C solid;
+    transition: 0.5s;
+}
+p {
+    font-weight: bold;
+    font-size: 15px;
+}
+label {
+    margin-right: 20px;
+    user-select: none;
+}
+.label_A {
+    margin-right: 52px;
+}
+.btn-border {
+    display: inline-block;
+    width: 390px;
+    text-align: center;
+    border: 1px solid black;
+    font-size: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: .4s;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+.btn-border:hover {
+    background-color: #5b5b5b;
+    color: #FFF;
+}
+footer {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    background-color: #D4D4D4;
+    margin-top: 30px;
+}
+footer p {
+    font-size: 13px;
+    line-height: 30px;
+}

@@ -13,16 +13,24 @@ window.onload = function () {
 function prev() {
   showDate.setMonth(showDate.getMonth() - 1);
   showProcess(showDate);
-  setTimeout("func();", 1000);
   ThisMonth--;
+  if (ThisMonth == 0) {
+      ThisMonth = 12;
+      ThisYear--;
+  }
+  func();
 }
 
 // 次の月表示
 function next() {
   showDate.setMonth(showDate.getMonth() + 1);
   showProcess(showDate);
-  setTimeout("func();", 1000);
   ThisMonth++;
+  if (ThisMonth == 13) {
+      ThisMonth = 1;
+      ThisYear++;
+  }
+  func();
 }
 
 // カレンダー表示
@@ -34,16 +42,16 @@ function showProcess(date) {
 
   var calendar = createProcess(year, month);
   document.querySelector("#calendar").innerHTML = calendar;
+  // console.log(calendar)
 }
 
 // カレンダー作成
 function createProcess(year, month) {
   // 曜日
-  var calendar = "<table><tr class='dayOfWeek'>";
+  var calendar = "<div id='calendar_body'>";
   for (var i = 0; i < week.length; i++) {
-    calendar += "<th>" + week[i] + "</th>";
+    calendar += "<div class='day'>" + week[i] + "</div>";
   }
-  calendar += "</tr>";
 
   var count = 0;
   var startDayOfWeek = new Date(year, month, 1).getDay();
@@ -53,19 +61,17 @@ function createProcess(year, month) {
 
   // 1行ずつ設定
   for (var i = 0; i < row; i++) {
-    calendar += "<tr>";
     // 1colum単位で設定
     for (var j = 0; j < week.length; j++) {
       if (i == 0 && j < startDayOfWeek) {
         // 1行目で1日まで先月の日付を設定
         calendar +=
-          "<td class='disabled click'>" +
-          (lastMonthEndDate - startDayOfWeek + j + 1) +
-          "</td>";
+          // "<td class='disabled click'>" +
+          "<div class='disabled click'>" + (lastMonthEndDate - startDayOfWeek + j + 1) + "</div>"
       } else if (count >= endDate) {
         // 最終行で最終日以降、翌月の日付を設定
         count++;
-        calendar += "<td class='disabled click'>" + (count - endDate) + "</td>";
+        calendar += "<div class='disabled click'>" + (count - endDate) + "</div>";
       } else {
         // 当月の日付を曜日に照らし合わせて設定
         count++;
@@ -74,13 +80,12 @@ function createProcess(year, month) {
           month == today.getMonth() &&
           count == today.getDate()
         ) {
-          calendar += "<td class='today Data" + count + "'>" + count + "</td>";
+          calendar += "<div class='today Data" + count + "'>" + count + "<span class='w_day'>" + '(' + week[j] + ')' + "</span>" + "</div>";
         } else {
-          calendar += "<td class='Data" + count + "'>" + count + "</td>";
+          calendar += "<div class='Data" + count + "'>" + count + "<span class='w_day'>" + '(' + week[j] + ')' + "</span>" + "</div>";
         }
       }
     }
-    calendar += "</tr>";
   }
   return calendar;
 }
@@ -104,7 +109,13 @@ function func() {
       let where = '.Data' + Number(DAY);
       let prev = $(where).html();
       let test = 'id="' + id + '"';
-      let next_html = '<br><span id="' + id + '" class="contents">' + Name + '<button class="open_spec" id="' + id + '_" onclick="open_spec(' + id + ')">詳細</button><span class="hidden_s" hidden="true" id="' + id + '_closed"><br>' + company + '<br>' + activity_data[i]["details"] + '<br>開始：' + start_time + '<br>終了：' + end_date_time + '<br><a class="pdf_paths" href="' + pdf_path + '">PDF</a><br><button class="activity_join_button" id="#' + id + '" onclick="join_activity(' + id + ')">参加</span></span>';
+      let time_s = start_time.split(' ');
+      let time_e = end_date_time.split(' ');
+      let time_ss = time_s[1];
+      let time_es = time_e[1];
+      time_ss = time_ss.replace(':00', '');
+      time_es = time_es.replace(':00', '');
+      let next_html = '<br><div class="main_contents"><span id="' + id + '" class="contents">' + '<span class="contents_title">' + Name + '</span>' + '<br>' + '<div class="orign"><div class="left"><button class="open_spec" id="' + id + '_" onclick="open_spec(' + id + ')">詳細</button></div><div class="right"><a class="pdf_paths" href="' + pdf_path + '" target="_blank" rel="noreferrer noopener">PDF</a></div></div><span class="hidden_s" hidden="true" id="' + id + '_closed">' + company + '<br>' + activity_data[i]["details"] + '<br>' + time_ss + ' 〜 ' + time_es + '<br><button class="activity_join_button" id="#' + id + '" onclick="join_activity(' + id + ')">参加</span></span></div>';
       if (!(prev.includes(test))) {
         $(where).append(next_html);
       }

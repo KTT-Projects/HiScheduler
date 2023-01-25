@@ -1,0 +1,262 @@
+@charset "utf-8";
+@font-face {
+    font-family: "Main";
+    src: local("Main"),
+    url('../font/piko.woff') format('woff'),
+    url('../font/rkm.otf') format('otf');
+}
+:root {
+    --accent-pink: #FF00B3;
+    --accent-yellow: #FBD429;
+    --accent-orange: #fc7200;
+    --accent-red: #F26267;
+}
+* {
+    font-family: "Main";
+}
+.wrapper {
+    /* max-width: 600px; */
+    margin: 0 auto;
+    color: #000;
+    /* margin-top: 50px; */
+}
+header {
+    margin-top: 20px;
+    margin-left: 30px;
+}
+body {
+    margin: 0;
+}
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+header a h1{
+    /*font-family: ;*/
+    font-size: 30px;
+    color: #000;
+    margin-left: 10px;
+    text-decoration: none;
+}
+main {
+    margin: 60px 40px 0 ;
+}
+#header {
+    text-align: center;
+    font-size: 24px;
+    margin: 1rem 0 0;
+}
+header a {
+    color: #000;
+    text-decoration: none;
+    display: flex;
+}
+.top_div {
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+.top_title {
+    font-size: 20px;
+    line-height: 45px;
+}
+.top_div a {
+    color: rgb(54, 54, 253);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 45px;
+}
+.error_container {
+    background-color: var(--accent-red);
+}
+.error_container li {
+    list-style: none;
+    margin-left: 35px;
+}
+.error_container button {
+    margin-left: 30px;
+    color: blue;
+    cursor: pointer;
+}
+form {
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 70%;
+    border-left: 2px #DF605E solid;
+}
+.form_flex {
+    display: flex;
+}
+.form_two {
+    margin-left: 30px;
+}
+input,
+button,
+select,
+textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    font: inherit;
+    outline: none;
+}
+label {
+    margin-left: 35px;
+    line-height: 70px;
+}
+input {
+    height: 40px;
+    margin-top: 30px;
+    border-bottom: 2px black solid;
+    width: 400px;
+    font-size: 15px;
+}
+input:focus {
+    border-bottom: 2px #DF605E solid;
+    transition: 0.5s;
+}
+input[type="text"] {
+    margin-top: 15px;
+}
+textarea {
+    border-left: 2px black solid;
+    margin-top: 30px;
+    width: 400px;
+    height: 70px;
+    resize: none;
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+textarea:focus {
+    border-left: 2px #DF605E solid;
+    transition: 0.5s;
+}
+.label_file {
+    line-height: 135px;
+}
+input[type="file"] {
+    border-bottom: none;
+    margin-top: 35px;
+    display: none;
+}
+.file_design {
+    padding: 10px 50px;
+    color: #E9934C;
+    border: 0.5px black solid;
+    cursor: pointer;
+    margin: 0;
+}
+input[type="submit"] {
+    width: 150px;
+    margin-left: 35px;
+    border: 2px #fc7200 solid;
+    border-radius: 7px;
+    cursor: pointer;
+}
+footer {
+    background-color: #2F2859;
+    color: #fff;
+    margin-top: 150px;
+    /*text-decoration: none;*/
+}
+footer a {
+    /*margin-top: 15px;*/
+    width: 100%;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+.writing {
+    margin-left: 10px;
+}
+.f-section1 {
+    padding: 0;
+    height: 50px;
+    display: flex;
+    color: #fff;
+    justify-content: space-around;
+}
+.f-section2 {
+    margin-bottom: 120px;
+    height: 50px;
+    display: flex;
+    color: #fff;
+    justify-content: space-around;
+}
+.f-section1 p {
+    width: 160px;
+}
+.f-section2 p {
+    width: 160px;
+}
+.f-section1 p:hover {
+    transition: .1s;
+    border-bottom: 1px solid #fff;
+    height: 30px;
+}
+.f-section2 p:hover {
+    transition: .1s;
+    border-bottom: 1px solid #fff;
+    height: 30px;
+}
+.f-under {
+    display: flex;
+    justify-content: space-around;
+    border-top: 0.5px solid #fff;
+}
+.f-icon{
+    font-size: 15px;
+    line-height: 30px;
+    margin-top: 0;
+    padding-top: 0;
+}
+.copyright {
+    width: 80%;
+    font-size: 13px;
+    margin: 1px 2px 0;
+    /*text-align: center;*/
+    line-height: 30px;
+}
+@media screen and (min-width: 450px) {
+    .second_form {
+        display: none;
+    }
+    .first_form {
+        display: block;
+    }
+}
+@media screen and (max-width: 450px) {
+    .second_form {
+        display: block;
+    }
+    form {
+        width: 90%;
+    }
+    label {
+        margin-left: 10px;
+        line-height: 30px;
+    }
+    input {
+        margin-top: 0;
+        margin-left: 20px;
+        height: 40px;
+        width: 320px;
+    }
+    textarea {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+    .file_design {
+        margin-left: 10px;
+    }
+    .first_form {
+        display: none;
+    }
+}

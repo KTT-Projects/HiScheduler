@@ -19,6 +19,8 @@ if ($_SESSION['AREA_ADMIN'] != 1) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="./manifest.json">
   <link rel="shortcut icon" href="./images/logo256.png">
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./manage_admin.css">
   <script src="./jquery.js"></script>
   <title>HiScheduler || 研修スケジューラー</title>
 </head>

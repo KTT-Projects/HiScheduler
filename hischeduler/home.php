@@ -55,7 +55,9 @@ if ($_POST['logout'] == 'ログアウト') {
   }
   // 研修参加処理
   function join_activity(id) {
-    if (confirm('この活動に参加しますか？')) {
+    if ('<?php echo $_SESSION['NAME'] ?>' == '') {
+      alert('管理者は研修に参加できません');
+    } else if (confirm('この活動に参加しますか？')) {
       let area = '<?php echo $_SESSION['AREA'] ?>';
       let com = '<?php echo $_SESSION['COM'] ?>';
       let name = '<?php echo $_SESSION['NAME'] ?>';
@@ -74,7 +76,7 @@ if ($_POST['logout'] == 'ログアウト') {
         })
         .done(function(data, dataType) {
           if (data == 'error') {
-            alert("エラー：活動に参加できませんでした");
+            alert("エラー：研修に参加できませんでした");
           }
           if (data == 'already joined') {
             alert("この活動にはすでに参加しています");
@@ -140,66 +142,62 @@ if ($_POST['logout'] == 'ログアウト') {
   ?>
 
   <header>
+    <img src="./images/logo192.png" alt="" class="logo">
     <h1><a href="./">HiScheduler</a></h1>
   </header>
-  <div class="choose">
-    <?php
-    if ($_SESSION['COM_ADMIN'] == 1) {
-      echo '<div class="choose-a"><a href="com_admin.php">会社管理ページ</a></div>';
-      echo '<div class="choose-a"><a href="add_activity.php">研修を追加</a></div>';
-      echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
-    } elseif ($_SESSION['AREA_ADMIN'] == 1) {
-      echo '<div class="choose-a"><a href="area_admin.php">地域管理ページ</a></div>';
-      echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
-    }
-    if (isset($_SESSION['NAME'])) {
-      echo '<div class="choose-a"><a href="manage_participation.php">参加研修の管理</a></div>';
-    }
-    ?>
-  </div>
-  <div class="popup"></div>
-  <div class="wrapper">
-    <!-- 年月を表示 -->
-    <h1 id="header"></h1>
-    <!-- ボタンクリックで月移動 -->
-    <div id="next-prev-button">
-      <button id="prev" onclick="prev()">‹</button>
-      <button id="next" onclick="next()">›</button>
+  <main>
+    <div class="choose">
+      <?php
+      if ($_SESSION['COM_ADMIN'] == 1) {
+        echo '<div class="choose-a"><a href="com_admin.php">会社管理ページ</a></div>';
+        echo '<div class="choose-a"><a href="add_activity.php">研修を追加</a></div>';
+        echo '<div class="choose-a"><a href="manage_activity.php">研修を管理</a></div>';
+      } elseif ($_SESSION['AREA_ADMIN'] == 1) {
+        echo '<div class="choose-a"><a href="area_admin.php">地域管理ページ</a></div>';
+        echo '<div class="choose-a"><a href="manage_activity.php">研修を削除</a></div>';
+      }
+      if (isset($_SESSION['NAME'])) {
+        echo '<div class="choose-a"><a href="manage_participation.php">参加研修の管理</a></div>';
+      }
+      ?>
     </div>
-    <!-- カレンダー -->
-    <div id="calendar"></div>
-  </div>
+    <div class="popup"></div>
+    <div class="wrapper">
+      <!-- 年月を表示 -->
+      <h1 id="header"></h1>
+      <!-- ボタンクリックで月移動 -->
+      <div id="next-prev-button">
+        <button id="prev" onclick="prev()">‹</button>
+        <button id="next" onclick="next()">›</button>
+      </div>
+      <!-- カレンダー -->
+      <div id="calendar"></div>
+    </div>
 
-  <form method="post">
-    <input type="submit" value="ログアウト" name="logout">
-  </form>
+    <form method="post">
+      <input type="submit" value="ログアウト" name="logout">
+    </form>
+  </main>
   <footer>
     <section class="f-section1">
-      <div class="f-page">
-        <p><a href="https://kttprojects.com/homepage/">KTT Projectsとは</a></p>
-        <p><a href="https://kttprojects.com/homepage/">活動内容</a></p>
-        <p><a href="https://kttprojects.com/homepage/">実績</a></p>
-      </div>
-      <div class="f-page">
-        <p><a href="https://kttprojects.com/homepage/">よくあるお問い合わせ</a></p>
-        <p><a href="https://kttprojects.com/homepage/">お問い合わせ</a></p>
-      </div>
+      <p><a href="https://kttprojects.com/homepage/">運営者情報</a></p>
+      <p><a href="https://kttprojects.com/homepage/">活動内容</a></p>
+      <p><a href="https://kttprojects.com/homepage/">実績</a></p>
     </section>
     <section class="f-section2">
-      <div class="writing f-under">
-        <p><a href="https://kttprojects.com/homepage/">利用規約</a></p>
-        <p><a href="https://kttprojects.com/homepage/">プライバシーポリシー</a></p>
-        <div class="f-icon f-under">
-          <a href="https://m.youtube.com/channel/UCihqEDqGrLOOrs0o-IBulqw"><i class="fa-brands fa-youtube f-youtube"></i></a>
-        </div>
-        <p class="copyright">Copyright ©︎ 2022 KTT Projects.</p>
-      </div>
+      <!--<p><a href="https://kttprojects.com/homepage/">よくあるお問い合わせ</a></p>-->
+      <p><a href="./tools/contact.html">お問い合わせ</a></p>
+      <p><a href="./terms_of_service.pdf">利用規約</a></p>
+      <p><a href="./privacy_policy.pdf">プライバシーポリシー</a></p>
     </section>
+    <div class="f-under">
+      <p class="copyright">©︎ 2022 KTT Projects.</p>
+      <div class="f-icon">
+        <a href="https://m.youtube.com/channel/UCihqEDqGrLOOrs0o-IBulqw"><i class="fa-brands fa-youtube f-youtube"></i></a>
+      </div>
+    </div>
   </footer>
   <script type="text/javascript" src="./js/index.js"></script>
-  <script>
-    // // 研修データ取得
-  </script>
 </body>
 
 </html>
